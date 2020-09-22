@@ -1,6 +1,6 @@
 #include "Shader.h"
 
-#include <glad/glad.h>
+#include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <GL/gl.h>
 #include <exception>
@@ -85,8 +85,7 @@ void Shader::CreateProgram() {
 
 void Shader::Bind() { glUseProgram(m_Program); }
 
-void Shader::SetUniform4f(const char *name, float x, float y, float z,
-                          float w) {
+void Shader::SetUniform4f(const char *name, float x, float y, float z, float w) {
   glUniform4f(glGetUniformLocation(m_Program, name), x, y, z, w);
 }
 

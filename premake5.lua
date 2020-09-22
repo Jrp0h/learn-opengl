@@ -7,10 +7,7 @@ workspace "OpenGlTest"
    }
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
-IncludeDirs = {}
-IncludeDirs['glad'] = "OpenGLTest/vendor/glad/include"
 
-include "OpenGLTest/vendor/glad"
 
 project "OpenGLTest"
    location "OpenGLTest"
@@ -29,16 +26,12 @@ project "OpenGLTest"
 
    includedirs {
       "%{prj.name}/src",
-      "%{IncludeDirs.glad}"
    }
 
-   links {
-      "glad"
-   }
 
    filter "system:linux"
       buildoptions { "-std=c++17" } 
-      links { "glfw", "GL", "X11", "pthread", "Xrandr", "Xi", "dl" } 
+      links { "glfw", "GL", "X11", "pthread", "Xrandr", "Xi", "dl", "GLEW"} 
 
       defines {
          "PLATFORM_LINUX"
@@ -48,7 +41,7 @@ project "OpenGLTest"
 
    filter "configurations:Debug"
       defines "_DEBUG"
-      -- symbols "On"
+      symbols "On"
 
    filter "configurations:Release"
       defines "_RELEASE"

@@ -19,11 +19,12 @@ endif
 # #############################################
 
 RESCOMP = windres
-INCLUDES += -Isrc -Ivendor/glad/include
+INCLUDES += -Isrc
 FORCE_INCLUDE +=
 ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
 ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
-ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64 -s
+LIBS += -lglfw -lGL -lX11 -lpthread -lXrandr -lXi -ldl -lGLEW
+LDDEPS +=
 LINKCMD = $(CXX) -o "$@" $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
 define PREBUILDCMDS
 endef
@@ -37,10 +38,9 @@ TARGETDIR = ../bin/Debug-linux-x86_64/OpenGLTest
 TARGET = $(TARGETDIR)/OpenGLTest
 OBJDIR = ../bin-int/Debug-linux-x86_64/OpenGLTest
 DEFINES += -DPLATFORM_LINUX -D_DEBUG
-ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -std=c++17
-ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -std=c++17 -std=c++17
-LIBS += vendor/glad/bin/Debug-linux-x86_64/glad/libglad.a -lglfw -lGL -lX11 -lpthread -lXrandr -lXi -ldl
-LDDEPS += vendor/glad/bin/Debug-linux-x86_64/glad/libglad.a
+ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -g -std=c++17
+ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -g -std=c++17 -std=c++17
+ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64
 
 else ifeq ($(config),release)
 TARGETDIR = ../bin/Release-linux-x86_64/OpenGLTest
@@ -49,8 +49,7 @@ OBJDIR = ../bin-int/Release-linux-x86_64/OpenGLTest
 DEFINES += -DPLATFORM_LINUX -D_RELEASE
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2 -std=c++17
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2 -std=c++17 -std=c++17
-LIBS += vendor/glad/bin/Release-linux-x86_64/glad/libglad.a -lglfw -lGL -lX11 -lpthread -lXrandr -lXi -ldl
-LDDEPS += vendor/glad/bin/Release-linux-x86_64/glad/libglad.a
+ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64 -s
 
 endif
 

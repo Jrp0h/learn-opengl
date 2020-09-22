@@ -1,6 +1,6 @@
 #include "Shader.h"
 #include <iostream>
-#include <glad/glad.h>
+#include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <GL/gl.h>
 #include <exception>
@@ -32,16 +32,14 @@ private:
   void createWindow() {
     m_Window = glfwCreateWindow(m_Width, m_Height, m_Title, nullptr, nullptr);
 
-    if (m_Window == nullptr) {
+    if (m_Window == nullptr) 
       throw std::runtime_error("Failed to create window");
-    }
+    
 
     glfwMakeContextCurrent(m_Window);
-
-    if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-    {
-      throw std::runtime_error("Failed to load GLAD");
-    }
+    
+    if (glewInit() != GLEW_OK)
+        throw std::runtime_error("Failed to initialize GLEW\n");
 
     glViewport(0, 0, m_Width, m_Height);
   }
@@ -50,7 +48,7 @@ private:
     float vertices[] = {
         -0.5f, -0.5f, 0.0f,     1.0f, 0.0f, 0.0f,
         0.5f,  -0.5f, 0.0f,     0.0f, 1.0f, 0.0f,
-        0.0f,   0.5f, 0.0f,     0.0f, 0.0f, 1.0f
+        0.0f,   0.5f, 0.0f,     0.0f, 1.0f, 1.0f
     };
 
     unsigned int VBO, VAO;
@@ -70,7 +68,7 @@ private:
     glEnableVertexAttribArray(1);
 
 
-    Shader shader("vertex.glsl", "fragment.glsl");
+    Shader shader("res/shaders/vertex.glsl", "res/shaders/fragment.glsl");
     shader.Bind();
 
     while (!glfwWindowShouldClose(m_Window)) {
@@ -79,8 +77,11 @@ private:
 
       glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
       glClear(GL_COLOR_BUFFER_BIT);
-     
-      // shader.SetUniform4f("outColor", redValue, greenValue, blueValue, 1.0f);
+      
+      // double time = glfwGetTime();
+      // double greenValue = (time / 1.0f) + 0.5f;
+
+      // shader.SetUniform4f("outColor", 1.0f, greenValue, 1.0f, 1.0f);
 
       glBindVertexArray(VAO);
       glDrawArrays(GL_TRIANGLES, 0, 3);
