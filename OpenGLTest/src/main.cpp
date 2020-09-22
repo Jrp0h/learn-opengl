@@ -12,27 +12,6 @@ class TriangleApplication {
 public:
   TriangleApplication(uint32_t width, uint32_t height, const char *title)
     : m_Width(width), m_Height(height), m_Title(title) {
-
-      m_VertexShader = "#version 330 core\n"\
-        "layout (location = 0) in vec3 aPos;\n"\
-        "layout (location = 1) in vec3 aColor;\n"\
-        "\n"\
-        "out vec3 outColor;\n"
-        "void main()\n"\
-        "{\n"\
-        "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"\
-        "   outColor = aColor;\n"\
-        "}";
-
-      m_FragmentShader = "#version 330 core\n"\
-        "out vec4 FragColor;\n"\
-        "\n"\
-        "in vec3 outColor;"\
-        "\n"
-        "void main()\n"\
-        "{\n"\
-        "   FragColor = vec4(outColor, 1.0f);\n"\
-        "}";
   }
 
   void Run() {
@@ -91,7 +70,7 @@ private:
     glEnableVertexAttribArray(1);
 
 
-    Shader shader(m_VertexShader, m_FragmentShader);
+    Shader shader("vertex.glsl", "fragment.glsl");
     shader.Bind();
 
     while (!glfwWindowShouldClose(m_Window)) {
@@ -138,8 +117,6 @@ int main() {
     std::cerr << e.what() << std::endl;
     return EXIT_FAILURE;
   }
-
-  std::cout << "Hello" << std::endl;
 
   return EXIT_SUCCESS;
 }
