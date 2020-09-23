@@ -1,4 +1,5 @@
 #include "Shader.h"
+#include "Texture.h"
 #include <iostream>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -7,7 +8,6 @@
 #include <sstream>
 #include <stdexcept>
 #include <math.h>
-#include "vendor/stb_image/stb_image.h"
 
 class TriangleApplication {
 public:
@@ -88,32 +88,11 @@ private:
     shader.Bind();
 
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
-    int width, height, nrChannels;
-    unsigned char* data = stbi_load("res/textures/wall.jpg", &width, &height, &nrChannels, 0);
-
-    if(!data)
-    {
-      throw std::runtime_error("Failed to load image");
-    }
-
-    unsigned int texture;
-    glGenTextures(1, &texture);
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture);
-
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-    glGenerateMipmap(GL_TEXTURE_2D);
-
-    stbi_image_free(data);
-
-
-
+ // texture code here
+    Texture texture("res/textures/wall.jpg");
+    
+    glm::mat4 trans = glm::mat4(1.0f);
+    trans = glm::translate(trans, glm::vec3(0.0f, 0.0f, 0.0f));
 
     while (!glfwWindowShouldClose(m_Window)) {
 
@@ -126,9 +105,10 @@ private:
       // double greenValue = (time / 1.0f) + 0.5f;
 
       // shader.SetUniform4f("outColor", 1.0f, greenValue, 1.0f, 1.0f);
+      trans = glm::rotate(trans, sin((float)glfwGetTime()) / 500, glm::vec3(0.0f, 0.0f, 1.0f));
+      shader.SetMatrix4fv("u_Transform", trans);
 
-      glBindTexture(GL_TEXTURE_2D, texture);
-
+      texture.Bind();
       shader.Bind();
       glBindVertexArray(VAO);
       // glDrawArrays(GL_TRIANGLES, 0, 3);

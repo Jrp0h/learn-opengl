@@ -89,7 +89,9 @@ void Shader::CreateProgram() {
 }
 
 void Shader::Bind() { glUseProgram(m_Program); }
-
+void Shader::Unbind() {
+  glUseProgram(0);
+}
 void Shader::SetUniform4f(const char *name, float x, float y, float z, float w) {
   glUniform4f(glGetUniformLocation(m_Program, name), x, y, z, w);
 }
@@ -102,4 +104,9 @@ void Shader::SetInt(const char *name, int value) {
 }
 void Shader::SetFloat(const char *name, float value) {
   glUniform1f(glGetUniformLocation(m_Program, name), value);
+}
+
+void Shader::SetMatrix4fv(const char *name, glm::mat4 value)
+{
+  glUniformMatrix4fv(glGetUniformLocation(m_Program, name), 1, GL_FALSE, glm::value_ptr(value));
 }

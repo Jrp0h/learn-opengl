@@ -8,6 +8,7 @@ workspace "OpenGlTest"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
+
 project "OpenGLTest"
    location "OpenGLTest"
    kind "ConsoleApp"
@@ -30,7 +31,7 @@ project "OpenGLTest"
 
    filter "system:linux"
       buildoptions { "-std=c++17" } 
-      links { "glfw", "GL", "X11", "pthread", "Xrandr", "Xi", "dl", "GLEW"} 
+      links { "glfw", "GL", "X11", "pthread", "Xrandr", "Xi", "dl", "GLEW" } 
 
       defines {
          "PLATFORM_LINUX"

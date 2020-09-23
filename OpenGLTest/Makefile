@@ -64,9 +64,11 @@ GENERATED :=
 OBJECTS :=
 
 GENERATED += $(OBJDIR)/Shader.o
+GENERATED += $(OBJDIR)/Texture.o
 GENERATED += $(OBJDIR)/main.o
 GENERATED += $(OBJDIR)/stb_image.o
 OBJECTS += $(OBJDIR)/Shader.o
+OBJECTS += $(OBJDIR)/Texture.o
 OBJECTS += $(OBJDIR)/main.o
 OBJECTS += $(OBJDIR)/stb_image.o
 
@@ -133,6 +135,9 @@ endif
 # #############################################
 
 $(OBJDIR)/Shader.o: src/Shader.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/Texture.o: src/Texture.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/main.o: src/main.cpp
