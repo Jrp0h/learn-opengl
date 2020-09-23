@@ -5,6 +5,7 @@
 class Shader {
   public:
     Shader(const char* vertexPath, const char* fragmentPath);
+    ~Shader();
     void Bind();
 
     void SetUniform4f(const char* name, float x, float y, float z, float w);

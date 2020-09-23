@@ -7,6 +7,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <math.h>
+#include "vendor/stb_image/stb_image.h"
 
 class TriangleApplication {
 public:
@@ -46,30 +47,73 @@ private:
   void mainLoop() {
 
     float vertices[] = {
-        -0.5f, -0.5f, 0.0f,     1.0f, 0.0f, 0.0f,
-        0.5f,  -0.5f, 0.0f,     0.0f, 1.0f, 0.0f,
-        0.0f,   0.5f, 0.0f,     0.0f, 1.0f, 1.0f
+        // Position             //Color             //Texture Cords
+         0.5f,  0.5f, 0.0f,     1.0f, 0.0f, 0.0f,   1.0f, 1.0f,
+         0.5f, -0.5f, 0.0f,     0.0f, 1.0f, 0.0f,   1.0f, 0.0f,
+        -0.5f, -0.5f, 0.0f,     0.0f, 0.0f, 1.0f,   0.0f, 0.0f,
+        -0.5f,  0.5f, 0.0f,     1.0f, 1.0f, 0.0f,   0.0f, 1.0f   
     };
 
-    unsigned int VBO, VAO;
+    unsigned int indices[] = {
+      0, 1, 3,
+      1, 2, 3
+    };
+
+    unsigned int VBO, VAO, EBO;
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
+    glGenBuffers(1, &EBO);
     // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
     glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
     // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
     // color attribute
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
+    // TexCoord attribute
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+    glEnableVertexAttribArray(2);
 
-
-    Shader shader("res/shaders/vertex.glsl", "res/shaders/fragment.glsl");
+    
+    // Shader shader("res/shaders/vertex.glsl", "res/shaders/fragment.glsl");
+    Shader shader("res/shaders/texture_vertex.glsl", "res/shaders/texture_fragment.glsl");
+    shader.SetInt("u_Texture", 0);
     shader.Bind();
+
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+    int width, height, nrChannels;
+    unsigned char* data = stbi_load("res/textures/wall.jpg", &width, &height, &nrChannels, 0);
+
+    if(!data)
+    {
+      throw std::runtime_error("Failed to load image");
+    }
+
+    unsigned int texture;
+    glGenTextures(1, &texture);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+    glGenerateMipmap(GL_TEXTURE_2D);
+
+    stbi_image_free(data);
+
+
+
 
     while (!glfwWindowShouldClose(m_Window)) {
 
@@ -83,8 +127,12 @@ private:
 
       // shader.SetUniform4f("outColor", 1.0f, greenValue, 1.0f, 1.0f);
 
+      glBindTexture(GL_TEXTURE_2D, texture);
+
+      shader.Bind();
       glBindVertexArray(VAO);
-      glDrawArrays(GL_TRIANGLES, 0, 3);
+      // glDrawArrays(GL_TRIANGLES, 0, 3);
+      glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
       glfwSwapBuffers(m_Window);
       glfwPollEvents();

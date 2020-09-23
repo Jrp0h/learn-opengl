@@ -8,7 +8,6 @@ workspace "OpenGlTest"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
-
 project "OpenGLTest"
    location "OpenGLTest"
    kind "ConsoleApp"

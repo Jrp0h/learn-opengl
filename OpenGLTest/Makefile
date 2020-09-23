@@ -65,8 +65,10 @@ OBJECTS :=
 
 GENERATED += $(OBJDIR)/Shader.o
 GENERATED += $(OBJDIR)/main.o
+GENERATED += $(OBJDIR)/stb_image.o
 OBJECTS += $(OBJDIR)/Shader.o
 OBJECTS += $(OBJDIR)/main.o
+OBJECTS += $(OBJDIR)/stb_image.o
 
 # Rules
 # #############################################
@@ -134,6 +136,9 @@ $(OBJDIR)/Shader.o: src/Shader.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/main.o: src/main.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/stb_image.o: src/vendor/stb_image/stb_image.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 

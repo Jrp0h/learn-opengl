@@ -18,6 +18,11 @@ Shader::Shader(const char *vertexPath, const char *fragmentPath)
   CreateProgram();
 }
 
+Shader::~Shader()
+{
+  glDeleteShader(m_Program);
+}
+
 std::string Shader::ReadFromFile(const char* filepath) {
   std::ifstream file; 
 
