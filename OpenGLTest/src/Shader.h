@@ -1,5 +1,6 @@
 #pragma once
 
+#include <glm/fwd.hpp>
 #include <string>
 #include <glm/glm.hpp>
 #include <glm/matrix.hpp>
@@ -13,6 +14,7 @@ class Shader {
     void Unbind();
 
     void SetUniform4f(const char* name, float x, float y, float z, float w);
+    void SetVec3(const char* name, glm::vec3 value); 
     void SetBool(const char* name, bool value);
     void SetInt(const char* name, int value);
     void SetFloat(const char* name, float value);

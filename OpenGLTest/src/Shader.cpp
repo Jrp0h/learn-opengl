@@ -4,6 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <GL/gl.h>
 #include <exception>
+#include <glm/gtc/type_ptr.hpp>
 #include <stdexcept>
 #include <sstream>
 #include <string>
@@ -94,6 +95,11 @@ void Shader::Unbind() {
 }
 void Shader::SetUniform4f(const char *name, float x, float y, float z, float w) {
   glUniform4f(glGetUniformLocation(m_Program, name), x, y, z, w);
+}
+
+void Shader::SetVec3(const char *name, glm::vec3 value)
+{
+  glUniform3fv(glGetUniformLocation(m_Program, name), 1, glm::value_ptr(value));
 }
 
 void Shader::SetBool(const char *name, bool value) {

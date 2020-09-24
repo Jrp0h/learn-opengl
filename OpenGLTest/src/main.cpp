@@ -114,6 +114,14 @@ private:
 
 
     // Light
+    unsigned int lightVAO;
+    glGenVertexArrays(1, &lightVAO);
+    glBindVertexArray(lightVAO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
 
     glm::vec3 cubePositions[] = {
         glm::vec3(0.0f, 0.0f, 0.0f),    glm::vec3(2.0f, 5.0f, -15.0f),
@@ -122,6 +130,9 @@ private:
         glm::vec3(1.3f, -2.0f, -2.5f),  glm::vec3(1.5f, 2.0f, -2.5f),
         glm::vec3(1.5f, 0.2f, -1.5f),   glm::vec3(-1.3f, 1.0f, -1.5f)};
 
+    Shader lightShader("res/shaders/lit_vertex.glsl", "res/shaders/lit_fragment.glsl");
+    lightShader.SetVec3("objectColor", glm::vec3(1.0f, 0.5f, 0.31f));
+    lightShader.SetVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
     // m_Transform = glm::translate(m_Transform, glm::vec3(0.1f, 0.0f, 0.0f));
     while (!m_Window.ShouldClose()) {
 
