@@ -13,6 +13,7 @@ Classes:
 
 * Point light
 * Directional Light
+* Spotlight
 
 ## Cube maps
 

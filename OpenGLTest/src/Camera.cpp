@@ -21,3 +21,19 @@ void Camera::Rotate(float d, glm::vec3 rotation)
 {
     m_Transform = glm::rotate(m_Transform, glm::radians(d), rotation);
 }
+
+glm::mat4 Camera::GetView() const 
+{
+    return glm::lookAt(m_Position, m_Position + GetFront(), GetUp());
+}
+
+void Camera::SetRotation(glm::vec3 rotation)
+{
+    glm::vec3 newUp;
+    newUp.x = cos(glm::radians(rotation.x)) * cos(glm::radians(rotation.y));
+    newUp.y = sin(glm::radians(rotation.y));
+    newUp.z = sin(glm::radians(rotation.x)) * cos(glm::radians(rotation.y));
+
+    m_Rotation = rotation;
+    m_Up = glm::normalize(newUp);
+}

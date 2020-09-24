@@ -43,9 +43,17 @@ class Input {
   public:
     static bool IsKeyPressed(Key key);
 
+    static float GetMouseY();
+    static float GetMouseX();
+
     static void SetWindow(GLFWwindow* window);
+    static void OnMouseMove(GLFWwindow* window, double xpos, double ypos);
 
   private:
     inline static GLFWwindow* m_Window;
+    inline static double m_LastX = 0, m_LastY = 0;
+    inline static float m_OffsetX = 0, m_OffsetY = 0;
+    inline static bool m_FirstMove = true;
+
 };
 

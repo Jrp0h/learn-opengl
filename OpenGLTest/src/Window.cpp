@@ -34,6 +34,8 @@ Window::Window(uint32_t width, uint32_t height, const char* title)
     glViewport(0, 0, m_Width, m_Height);
 
     Input::SetWindow(m_Window);
+    // glfwSetInputMode(m_Window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);  
+    glfwSetCursorPosCallback(m_Window, Input::OnMouseMove);
 }
 
 Window::~Window()
