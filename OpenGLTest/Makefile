@@ -63,12 +63,18 @@ endif
 GENERATED :=
 OBJECTS :=
 
+GENERATED += $(OBJDIR)/Camera.o
+GENERATED += $(OBJDIR)/Input.o
 GENERATED += $(OBJDIR)/Shader.o
 GENERATED += $(OBJDIR)/Texture.o
+GENERATED += $(OBJDIR)/Window.o
 GENERATED += $(OBJDIR)/main.o
 GENERATED += $(OBJDIR)/stb_image.o
+OBJECTS += $(OBJDIR)/Camera.o
+OBJECTS += $(OBJDIR)/Input.o
 OBJECTS += $(OBJDIR)/Shader.o
 OBJECTS += $(OBJDIR)/Texture.o
+OBJECTS += $(OBJDIR)/Window.o
 OBJECTS += $(OBJDIR)/main.o
 OBJECTS += $(OBJDIR)/stb_image.o
 
@@ -134,10 +140,19 @@ endif
 # File Rules
 # #############################################
 
+$(OBJDIR)/Camera.o: src/Camera.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/Input.o: src/Input.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/Shader.o: src/Shader.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/Texture.o: src/Texture.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/Window.o: src/Window.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/main.o: src/main.cpp
