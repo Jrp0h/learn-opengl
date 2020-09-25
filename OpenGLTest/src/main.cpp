@@ -20,10 +20,7 @@ public:
     : m_Width(width), m_Height(height), m_Title(title), m_Camera(), m_Window(width, height, title) {  }
 
   void Run() {
-    // initGLFW();
-    // createWindow();
     mainLoop();
-    // cleanup();
   }
 
 private:
@@ -32,49 +29,49 @@ private:
     glEnable(GL_DEPTH_TEST);
 
   
-    float vertices[] = {
-              -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-                       0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-                                0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-                                         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-                                                 -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-                                                         -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+float vertices[] = {
+        // positions          // normals           // texture coords
+        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
+         0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
 
-                                                                 -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-                                                                          0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-                                                                                   0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-                                                                                            0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-                                                                                                    -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-                                                                                                            -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
+         0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
 
-                                                                                                                    -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-                                                                                                                            -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-                                                                                                                                    -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-                                                                                                                                            -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-                                                                                                                                                    -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-                                                                                                                                                            -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+        -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
+        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+        -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
 
-                                                                                                                                                                     0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-                                                                                                                                                                              0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-                                                                                                                                                                                       0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-                                                                                                                                                                                                0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-                                                                                                                                                                                                         0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-                                                                                                                                                                                                                  0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
+         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+         0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
 
-                                                                                                                                                                                                                          -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-                                                                                                                                                                                                                                   0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-                                                                                                                                                                                                                                            0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-                                                                                                                                                                                                                                                     0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-                                                                                                                                                                                                                                                             -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-                                                                                                                                                                                                                                                                     -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
+         0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  1.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
 
-                                                                                                                                                                                                                                                                             -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-                                                                                                                                                                                                                                                                                      0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-                                                                                                                                                                                                                                                                                               0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-                                                                                                                                                                                                                                                                                                        0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-                                                                                                                                                                                                                                                                                                                -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-                                                                                                                                                                                                                                                                                                                        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
-                                                                                                                                                                                                                                                                                                                              
+        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  1.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f
     };
 
 
@@ -83,38 +80,26 @@ private:
     unsigned int VBO, VAO; //, EBO;
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
-    // glGenBuffers(1, &EBO);
-    // bind the Vertex Array Object first, then bind and set vertex buffer(s),
-    // and then configure vertex attributes(s).
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
     glBindVertexArray(VAO);
 
-    // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    // glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
     // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
-    // texture coords attribute
-    // glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)(3 * sizeof(float)));
-    // glEnableVertexAttribArray(1);
 
-    // Shader shader("res/shaders/texture_vertex.glsl", "res/shaders/texture_fragment.glsl");
-    // shader.SetInt("u_Texture", 0);
-    // shader.Bind();
-
-    // Texture texture("res/textures/wall.jpg");
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+    glEnableVertexAttribArray(2);
 
     m_Camera = new Camera(45.0f, m_Width, m_Height);
     m_Camera->SetPosition(glm::vec3(0.0f, 0, 5));
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-
 
     glm::vec3 cubePositions[] = { glm::vec3(0.0f, 0.0f, 0.0f),    glm::vec3(0.0f, 1.0f, -1.0f),
         glm::vec3(-1.5f, -2.2f, -2.5f), glm::vec3(-3.8f, -2.0f, -12.3f),
@@ -123,10 +108,10 @@ private:
         glm::vec3(1.5f, 0.2f, -1.5f),   glm::vec3(-1.3f, 1.0f, -1.5f)};
 
     Shader litShader("res/shaders/lit_vertex.glsl", "res/shaders/lit_fragment.glsl");
-    // m_Transform = glm::translate(m_Transform, glm::vec3(0.1f, 0.0f, 0.0f));
+    Texture box("res/textures/container2.png");
+    Texture boxSpecular("res/textures/container2_specular.png");
+
     while (!m_Window.ShouldClose()) {
-
-
       float currentFrame = glfwGetTime();
       deltaTime = currentFrame - lastFrame;
       lastFrame = currentFrame;
@@ -141,12 +126,23 @@ private:
       model = glm::translate(model, cubePositions[0]);
       model = glm::rotate(model, glm::radians(20.0f * 0), glm::vec3(1.0f, 0.3f, 0.5f));
 
-      // texture.Bind();
       litShader.Bind();
-      litShader.SetVec3("u_ObjectColor", glm::vec3(1.0f, 0.5f, 0.31f));
-      litShader.SetVec3("u_LightColor", glm::vec3(1.0f, 1.0f, 1.0f));
-      litShader.SetVec3("u_LightPosition", glm::vec3(1.0f, 0.0f, 5.0f));
+      // litShader.SetVec3("u_ObjectColor", glm::vec3(1.0f, 0.5f, 0.31f));
+      // litShader.SetVec3("u_LightColor", glm::vec3(1.0f, 1.0f, 1.0f));
+      // litShader.SetVec3("u_LightPosition", glm::vec3(1.0f, 0.0f, 5.0f));
       litShader.SetVec3("u_ViewPosition", m_Camera->GetPosition());
+
+      // litShader.SetVec3("u_Material.ambient", glm::vec3(1.0f, 0.5f, 0.31f));
+      litShader.SetInt("u_Material.diffuse", 0);
+      box.Bind();
+      litShader.SetInt("u_Material.specular", 1);
+      boxSpecular.Bind(1);
+      litShader.SetFloat("u_Material.shininess", 32.0f);
+
+      litShader.SetVec3("u_PointLight.position", glm::vec3(1.0f, 0.0f, 5.0f));
+      litShader.SetVec3("u_PointLight.diffuse", glm::vec3(0.5f, 0.5f, 0.5f));
+      litShader.SetVec3("u_PointLight.ambient", glm::vec3(0.2f, 0.2f, 0.2f));
+      litShader.SetVec3("u_PointLight.specular", glm::vec3(1.0f, 1.0f, 1.0f));
 
       litShader.SetMatrix4fv("u_Model", model);
       litShader.SetMatrix4fv("u_View", m_Camera->GetView());
@@ -163,45 +159,40 @@ private:
 
   void processInput(float dt) {
     
-    // float sensitivity = 0.1f;
+    float sensitivity = 0.05f;
+    glm::vec3 rotation = m_Camera->GetRotation();
+    rotation.x += Input::GetMouseX() * sensitivity;
+    rotation.y -= Input::GetMouseY() * sensitivity;
 
-    // glm::vec3 rotation = m_Camera->GetRotation();
-    // rotation.x += Input::GetMouseX() * sensitivity;
-    // rotation.y += Input::GetMouseY() * sensitivity;
+    if(rotation.y > 89.0f)
+      rotation.y = 89.0f;
+    if(rotation.y < -89.0f)
+      rotation.y = -89.0f;
 
-    // if(rotation.x > 89.0f)
-      // rotation.x = 89.0f;
-    // if(rotation.x < -89.0f)
-      // rotation.x = -89.0f;
-
-    // m_Camera->SetRotation(rotation);
+    m_Camera->SetRotation(rotation);
 
     auto currentPos = m_Camera->GetPosition();
-    const float cameraSpeed = 5.0f;
+    float cameraSpeed = 5.0f;
+  
+    if(Input::IsKeyPressed(Key::LEFT_CONTROL))
+      cameraSpeed = 1.0f;
 
     if (Input::IsKeyPressed(Key::ESCAPE))
       m_Window.SetShouldClose(true);
     if (Input::IsKeyPressed(Key::D))
-      m_Camera->SetPosition(currentPos + (cameraSpeed * dt * m_Camera->GetLeft()));
+      currentPos += (cameraSpeed * dt * m_Camera->GetRight());
     if (Input::IsKeyPressed(Key::A))
-      m_Camera->SetPosition(currentPos - (cameraSpeed * dt * m_Camera->GetLeft()));
+      currentPos -= (cameraSpeed * dt * m_Camera->GetRight());
     if (Input::IsKeyPressed(Key::W))
-      m_Camera->SetPosition(currentPos + (cameraSpeed * dt * m_Camera->GetFront()));
+      currentPos += (cameraSpeed * dt * m_Camera->GetFront());
     if (Input::IsKeyPressed(Key::S))
-      m_Camera->SetPosition(currentPos - (cameraSpeed * dt * m_Camera->GetFront()));
+      currentPos -= (cameraSpeed * dt * m_Camera->GetFront());
     if (Input::IsKeyPressed(Key::SPACE))
-      m_Camera->SetPosition(currentPos + (cameraSpeed * dt * m_Camera->GetUp()));
+      currentPos += (cameraSpeed * dt * m_Camera->GetUp());
     if (Input::IsKeyPressed(Key::LEFT_SHIFT))
-      m_Camera->SetPosition(currentPos - (cameraSpeed * dt * m_Camera->GetUp()));
+      currentPos -= (cameraSpeed * dt * m_Camera->GetUp());
 
-    // if (Input::IsKeyPressed(Key::DOWN))
-      // m_Camera->Rotate(-10 * dt, glm::vec3(1, 0.0f, 0.0f));
-    // if (Input::IsKeyPressed(Key::UP))
-      // m_Camera->Rotate(10 * dt, glm::vec3(1, 0.0f, 0.0f));
-    // if (Input::IsKeyPressed(Key::LEFT))
-      // m_Camera->Rotate(10 * dt, glm::vec3(0.0f, 1.0f, 0.0f));
-    // if (Input::IsKeyPressed(Key::RIGHT))
-      // m_Camera->Rotate(-10 * dt, glm::vec3(0.0f, 1, 0.0f));
+    m_Camera->SetPosition(currentPos);
   }
 
 private:

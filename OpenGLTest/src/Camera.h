@@ -16,9 +16,9 @@ class Camera {
     inline float GetNear() const { return m_AspectRation; }
     inline float GetFar() const { return m_AspectRation; }
 
-    inline glm::vec3 GetFront() const { return glm::vec3(0.0f, 0.0f, -1.0f); }
+    inline glm::vec3 GetFront() const { return m_Front; }
     inline glm::vec3 GetUp() const { return m_Up; }
-    inline glm::vec3 GetLeft() const { return glm::normalize(glm::cross(GetFront(), GetUp())); };
+    inline glm::vec3 GetRight() const { return m_Right; };
 
     inline glm::vec3 GetPosition() const { return m_Position; }
     inline glm::vec3 GetRotation() const { return m_Rotation; }
@@ -39,6 +39,9 @@ class Camera {
     unsigned int m_Width, m_Height;
 
     glm::vec3 m_Up = glm::vec3(0.0f, 1.0f, 0.0f);
+    glm::vec3 m_WorldUp = glm::vec3(0.0f, 1.0f, 0.0f);
+    glm::vec3 m_Front = glm::vec3(0.0f, 0.0f, -1.0f);
+    glm::vec3 m_Right = glm::vec3(0.0f, 1.0f, -1.0f);
 
     glm::vec3 m_Position, m_Rotation;
 };

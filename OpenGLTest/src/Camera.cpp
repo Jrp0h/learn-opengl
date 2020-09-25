@@ -10,6 +10,8 @@ Camera::Camera(float fov, unsigned int width, unsigned int height, float near, f
 {
   m_Projection = glm::perspective(glm::radians(fov), (float)width / (float)height, near, far);
   m_Transform = glm::mat4(1.0f);
+
+  m_Right = glm::normalize(glm::cross(m_Front, m_WorldUp));
 }
 
 void Camera::Translate(glm::vec3 position) 
@@ -29,11 +31,13 @@ glm::mat4 Camera::GetView() const
 
 void Camera::SetRotation(glm::vec3 rotation)
 {
-    glm::vec3 newUp;
-    newUp.x = cos(glm::radians(rotation.x)) * cos(glm::radians(rotation.y));
-    newUp.y = sin(glm::radians(rotation.y));
-    newUp.z = sin(glm::radians(rotation.x)) * cos(glm::radians(rotation.y));
+    glm::vec3 newFront;
+    newFront.x = cos(glm::radians(rotation.x)) * cos(glm::radians(rotation.y));
+    newFront.y = sin(glm::radians(rotation.y));
+    newFront.z = sin(glm::radians(rotation.x)) * cos(glm::radians(rotation.y));
 
     m_Rotation = rotation;
-    m_Up = glm::normalize(newUp);
+    m_Front = glm::normalize(newFront);
+    m_Right = glm::normalize(glm::cross(m_Front, m_WorldUp));
+    m_Up = glm::normalize(glm::cross(m_Right, m_Front));
 }

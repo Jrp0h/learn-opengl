@@ -1,5 +1,6 @@
 #include "Window.h"
 
+#include <GLFW/glfw3.h>
 #include <exception>
 #include <glm/trigonometric.hpp>
 #include <iostream>
@@ -29,13 +30,15 @@ Window::Window(uint32_t width, uint32_t height, const char* title)
     if (glewInit() != GLEW_OK)
       throw std::runtime_error("Failed to initialize GLEW\n");
 
-    // glfwSetWindowSizeCallback(m_Window, Window::OnResize);
+    glfwSetWindowSizeCallback(m_Window, Window::OnResize);
 
     glViewport(0, 0, m_Width, m_Height);
 
     Input::SetWindow(m_Window);
-    // glfwSetInputMode(m_Window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);  
+    glfwSetInputMode(m_Window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);  
     glfwSetCursorPosCallback(m_Window, Input::OnMouseMove);
+
+    glfwSetWindowUserPointer(m_Window, (void*)this);
 }
 
 Window::~Window()
@@ -64,10 +67,11 @@ void Window::SwapBuffers() const
   glfwSwapBuffers(m_Window);
 }
 
-// void Window::OnResize(GLFWwindow* window, uint32_t width, uint32_t height)
-// {
-  // m_Width = width;
-  // m_Height = height;
+void Window::OnResize(GLFWwindow* window, int width, int height)
+{
+  auto t = (Window*)glfwGetWindowUserPointer(window);
+  t->m_Width = width;
+  t->m_Height = height;
 
-  // glViewport(0, 0, width, height);
-// }
+  glViewport(0, 0, width, height);
+}

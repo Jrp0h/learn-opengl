@@ -18,16 +18,20 @@ Texture::Texture(const char* filePath)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
+    stbi_set_flip_vertically_on_load(true);
+
     int nrChannels;
-    unsigned char* data = stbi_load("res/textures/wall.jpg", &m_Width, &m_Height, &nrChannels, 0);
+    unsigned char* data = stbi_load(filePath, &m_Width, &m_Height, &nrChannels, 0);
 
     if(!data)
       throw std::runtime_error("Failed to load image");
 
+    unsigned int type = nrChannels == 3 ? GL_RGB : GL_RGBA;
+
     glGenTextures(1, &m_TextureID);
     glBindTexture(GL_TEXTURE_2D, m_TextureID);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_Width, m_Height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_Width, m_Height, 0, type, GL_UNSIGNED_BYTE, data);
     glGenerateMipmap(GL_TEXTURE_2D);
 
     stbi_image_free(data);

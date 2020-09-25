@@ -20,6 +20,9 @@ public:
   void SwapBuffers() const;
 
 private:
+  static void OnResize(GLFWwindow * window, int width, int height);
+
+private:
   GLFWwindow* m_Window;
   uint32_t m_Width, m_Height;
   char* m_Title;
