@@ -8,6 +8,8 @@
 
 #include <iostream>
 #include <exception>
+#include <string>
+#include <sstream>
 
 Texture::Texture(const char* filePath)
   : m_Width(0), m_Height(0), m_FilePath(filePath)
@@ -24,7 +26,11 @@ Texture::Texture(const char* filePath)
     unsigned char* data = stbi_load(filePath, &m_Width, &m_Height, &nrChannels, 0);
 
     if(!data)
-      throw std::runtime_error("Failed to load image");
+    {
+      std::stringstream ss;
+      ss << "Failed to load image " << filePath;
+      throw std::runtime_error(ss.str().c_str());
+    }
 
     unsigned int type = nrChannels == 3 ? GL_RGB : GL_RGBA;
 

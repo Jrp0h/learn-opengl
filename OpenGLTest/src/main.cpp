@@ -2,17 +2,20 @@
 #include <GL/gl.h>
 #include <GLFW/glfw3.h>
 #include <exception>
+#include <glm/fwd.hpp>
 #include <glm/trigonometric.hpp>
 #include <iostream>
 #include <math.h>
 #include <sstream>
 #include <stdexcept>
+#include <string>
 
 #include "Camera.h"
 #include "Input.h"
 #include "Shader.h"
 #include "Texture.h"
 #include "Window.h"
+#include "Light.h"
 
 class TriangleApplication {
 public:
@@ -101,11 +104,25 @@ float vertices[] = {
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
-    glm::vec3 cubePositions[] = { glm::vec3(0.0f, 0.0f, 0.0f),    glm::vec3(0.0f, 1.0f, -1.0f),
-        glm::vec3(-1.5f, -2.2f, -2.5f), glm::vec3(-3.8f, -2.0f, -12.3f),
-        glm::vec3(2.4f, -0.4f, -3.5f),  glm::vec3(-1.7f, 3.0f, -7.5f),
-        glm::vec3(1.3f, -2.0f, -2.5f),  glm::vec3(1.5f, 2.0f, -2.5f),
-        glm::vec3(1.5f, 0.2f, -1.5f),   glm::vec3(-1.3f, 1.0f, -1.5f)};
+    glm::vec3 cubePositions[] = { 
+        glm::vec3(0.0f, 0.0f, 0.0f),
+        glm::vec3(0.0f, 1.0f, -1.0f),
+        glm::vec3(-1.5f, -2.2f, -2.5f),
+        glm::vec3(-3.8f, -2.0f, -12.3f),
+        glm::vec3(2.4f, -0.4f, -3.5f),
+        glm::vec3(-1.7f, 3.0f, -7.5f),
+        glm::vec3(1.3f, -2.0f, -2.5f),
+        glm::vec3(1.5f, 2.0f, -2.5f),
+        glm::vec3(1.5f, 0.2f, -1.5f), 
+        glm::vec3(-1.3f, 1.0f, -1.5f)
+    };
+
+    glm::vec3 pointLights[] = { 
+        glm::vec3( 0.7f,  0.2f,  2.0f),
+        glm::vec3( 2.3f, -3.3f, -4.0f),
+        glm::vec3(-4.0f,  2.0f, -12.0f),
+        glm::vec3( 0.0f,  0.0f, -3.0f)
+    };
 
     Shader litShader("res/shaders/lit_vertex.glsl", "res/shaders/lit_fragment.glsl");
     Texture box("res/textures/container2.png");
@@ -118,39 +135,80 @@ float vertices[] = {
 
       processInput(deltaTime);
 
-      glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+      glClearColor(0.3f, 0.2f, 0.2f, 1.0f);
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-      glm::mat4 model = glm::mat4(1.0f);
-      model = glm::mat4(1.0f);
-      model = glm::translate(model, cubePositions[0]);
-      model = glm::rotate(model, glm::radians(20.0f * 0), glm::vec3(1.0f, 0.3f, 0.5f));
+      for(int i = 0; i < 10; i++)
+      {
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, cubePositions[i]);
+        model = glm::rotate(model, glm::radians(20.0f * i), glm::vec3(1.0f, 0.3f, 0.5f));
 
-      litShader.Bind();
-      // litShader.SetVec3("u_ObjectColor", glm::vec3(1.0f, 0.5f, 0.31f));
-      // litShader.SetVec3("u_LightColor", glm::vec3(1.0f, 1.0f, 1.0f));
-      // litShader.SetVec3("u_LightPosition", glm::vec3(1.0f, 0.0f, 5.0f));
-      litShader.SetVec3("u_ViewPosition", m_Camera->GetPosition());
+        litShader.Bind();
+        
+        litShader.SetInt("u_Material.diffuse", 0);
+        box.Bind();
 
-      // litShader.SetVec3("u_Material.ambient", glm::vec3(1.0f, 0.5f, 0.31f));
-      litShader.SetInt("u_Material.diffuse", 0);
-      box.Bind();
-      litShader.SetInt("u_Material.specular", 1);
-      boxSpecular.Bind(1);
-      litShader.SetFloat("u_Material.shininess", 32.0f);
+        litShader.SetInt("u_Material.specular", 1);
+        boxSpecular.Bind(1);
 
-      litShader.SetVec3("u_PointLight.position", glm::vec3(1.0f, 0.0f, 5.0f));
-      litShader.SetVec3("u_PointLight.diffuse", glm::vec3(0.5f, 0.5f, 0.5f));
-      litShader.SetVec3("u_PointLight.ambient", glm::vec3(0.2f, 0.2f, 0.2f));
-      litShader.SetVec3("u_PointLight.specular", glm::vec3(1.0f, 1.0f, 1.0f));
+        litShader.SetFloat("u_Material.shininess", 32.0f);
 
-      litShader.SetMatrix4fv("u_Model", model);
-      litShader.SetMatrix4fv("u_View", m_Camera->GetView());
-      litShader.SetMatrix4fv("u_Projection", m_Camera->GetProjection());
+        // Point Light
+        PointLight pointLight("");
 
-      glBindVertexArray(VAO);
+        for(int i = 0; i < sizeof(pointLights)/sizeof(pointLights[0]); i++)
+        {
+          pointLight.SetName("u_PointLights[" + std::to_string(i) + "]");
+          pointLight.SetPosition(pointLights[i]);
 
-      glDrawArrays(GL_TRIANGLES, 0, 36);
+          pointLight.SetDiffuse(glm::vec3(0.5f, 0.5f, 0.5f));
+          pointLight.SetAmbient(glm::vec3(0.2f, 0.2f, 0.2f));
+          pointLight.SetSpecular(glm::vec3(1.0f, 1.0f, 1.0f));
+
+          pointLight.SetConstant(1.0f);
+          pointLight.SetLinear(0.09f);
+          pointLight.SetQuadratic(0.032f);
+          pointLight.Use(&litShader);
+        }
+
+        // Directional Light
+        DirectionalLight directionalLight("u_DirectionLight");
+        directionalLight.SetDirection(glm::vec3(-0.2f, -1.0f, 0.3f));
+
+        directionalLight.SetDiffuse(glm::vec3(0.2f, 0.2f, 0.2f));
+        directionalLight.SetAmbient(glm::vec3(0.2f, 0.2f, 0.2f));
+        directionalLight.SetSpecular(glm::vec3(0.5f, 0.5f, 0.5f));
+
+        directionalLight.Use(&litShader);
+
+        // Spotlight
+        Spotlight spotlight("u_Spotlight");
+        spotlight.SetPosition(m_Camera->GetPosition());
+        spotlight.SetDirection(m_Camera->GetFront());
+        spotlight.SetCutOff(glm::cos(glm::radians(12.5f)));
+        spotlight.SetOuterCutOff(glm::cos(glm::radians(17.5f)));
+
+        spotlight.SetDiffuse(glm::vec3(0.5f, 0.5f, 0.5f));
+        spotlight.SetAmbient(glm::vec3(0.2f, 0.2f, 0.2f));
+        spotlight.SetSpecular(glm::vec3(1.0f, 1.0f, 1.0f));
+
+        spotlight.SetConstant(1.0f);
+        spotlight.SetLinear(0.09f);
+        spotlight.SetQuadratic(0.032f);
+
+        spotlight.Use(&litShader);
+        litShader.SetMatrix4fv("u_Model", model);
+        litShader.SetMatrix4fv("u_View", m_Camera->GetView());
+        litShader.SetMatrix4fv("u_Projection", m_Camera->GetProjection());
+        litShader.SetVec3("u_ViewPosition", m_Camera->GetPosition());
+
+        litShader.Bind();
+        glBindVertexArray(VAO);
+
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+      }
 
       m_Window.SwapBuffers();
       glfwPollEvents();
@@ -188,9 +246,9 @@ float vertices[] = {
     if (Input::IsKeyPressed(Key::S))
       currentPos -= (cameraSpeed * dt * m_Camera->GetFront());
     if (Input::IsKeyPressed(Key::SPACE))
-      currentPos += (cameraSpeed * dt * m_Camera->GetUp());
+      currentPos -= (cameraSpeed * dt * glm::vec3(0.0f, -1.0f, 0.0f));
     if (Input::IsKeyPressed(Key::LEFT_SHIFT))
-      currentPos -= (cameraSpeed * dt * m_Camera->GetUp());
+      currentPos -= (cameraSpeed * dt * glm::vec3(0.0f, 1.0f, 0.0f));
 
     m_Camera->SetPosition(currentPos);
   }
