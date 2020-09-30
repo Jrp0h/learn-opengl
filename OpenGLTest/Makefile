@@ -23,7 +23,7 @@ INCLUDES += -Isrc
 FORCE_INCLUDE +=
 ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
 ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
-LIBS += -lglfw -lGL -lX11 -lpthread -lXrandr -lXi -ldl -lGLEW
+LIBS += -lglfw -lGL -lX11 -lpthread -lXrandr -lXi -ldl -lGLEW -lassimp
 LDDEPS +=
 LINKCMD = $(CXX) -o "$@" $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
 define PREBUILDCMDS
@@ -40,7 +40,7 @@ OBJDIR = ../bin-int/Debug-linux-x86_64/OpenGLTest
 DEFINES += -DPLATFORM_LINUX -D_DEBUG
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -g -std=c++17
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -g -std=c++17 -std=c++17
-ALL_LDFLAGS += $(LDFLAGS) -L../vendor -L/usr/lib64 -m64
+ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64
 
 else ifeq ($(config),release)
 TARGETDIR = ../bin/Release-linux-x86_64/OpenGLTest
@@ -49,7 +49,7 @@ OBJDIR = ../bin-int/Release-linux-x86_64/OpenGLTest
 DEFINES += -DPLATFORM_LINUX -D_RELEASE
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2 -std=c++17
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2 -std=c++17 -std=c++17
-ALL_LDFLAGS += $(LDFLAGS) -L../vendor -L/usr/lib64 -m64 -s
+ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64 -s
 
 endif
 
@@ -67,6 +67,7 @@ GENERATED += $(OBJDIR)/Camera.o
 GENERATED += $(OBJDIR)/Input.o
 GENERATED += $(OBJDIR)/Light.o
 GENERATED += $(OBJDIR)/Mesh.o
+GENERATED += $(OBJDIR)/Model.o
 GENERATED += $(OBJDIR)/Shader.o
 GENERATED += $(OBJDIR)/Texture.o
 GENERATED += $(OBJDIR)/Window.o
@@ -76,6 +77,7 @@ OBJECTS += $(OBJDIR)/Camera.o
 OBJECTS += $(OBJDIR)/Input.o
 OBJECTS += $(OBJDIR)/Light.o
 OBJECTS += $(OBJDIR)/Mesh.o
+OBJECTS += $(OBJDIR)/Model.o
 OBJECTS += $(OBJDIR)/Shader.o
 OBJECTS += $(OBJDIR)/Texture.o
 OBJECTS += $(OBJDIR)/Window.o
@@ -154,6 +156,9 @@ $(OBJDIR)/Light.o: src/Light.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/Mesh.o: src/Mesh.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/Model.o: src/Model.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/Shader.o: src/Shader.cpp

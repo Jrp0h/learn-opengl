@@ -32,12 +32,19 @@ Texture::Texture(const char* filePath)
       throw std::runtime_error(ss.str().c_str());
     }
 
-    unsigned int type = nrChannels == 3 ? GL_RGB : GL_RGBA;
+    GLenum format;
+
+    if(nrChannels == 1)
+      format = GL_RED;
+    if(nrChannels == 3)
+      format = GL_RGB;
+    if(nrChannels == 4)
+      format = GL_RGBA;
 
     glGenTextures(1, &m_TextureID);
     glBindTexture(GL_TEXTURE_2D, m_TextureID);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_Width, m_Height, 0, type, GL_UNSIGNED_BYTE, data);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_Width, m_Height, 0, format, GL_UNSIGNED_BYTE, data);
     glGenerateMipmap(GL_TEXTURE_2D);
 
     stbi_image_free(data);

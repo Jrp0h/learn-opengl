@@ -31,8 +31,8 @@ project "OpenGLTest"
 
    filter "system:linux"
       buildoptions { "-std=c++17" } 
-      libdirs { "vendor/" }
-      links { "glfw", "GL", "X11", "pthread", "Xrandr", "Xi", "dl", "GLEW" } 
+      -- libdirs { "vendor/" }
+      links { "glfw", "GL", "X11", "pthread", "Xrandr", "Xi", "dl", "GLEW", "assimp" } 
 
       defines {
          "PLATFORM_LINUX"
