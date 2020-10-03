@@ -61,7 +61,7 @@ private:
     while (!m_Window.ShouldClose()) {
       Time::UpdateDeltaTime();
 
-      std::cout << "FPS: " << 1.0f / Time::GetDeltaTime() << std::endl;
+      // std::cout << "FPS: " << 1.0f / Time::GetDeltaTime() << std::endl;
 
       m_Window.BeginFrame();
       m_Animator.UpdateTime();

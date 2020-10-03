@@ -11,6 +11,8 @@ class Renderer
   public:
     static void TexturedQuad(const Transform* trans, const Camera* cam, const Texture* texture);
     static void RenderSpriteSheet(const Transform* trans, const Camera* cam, const SpriteSheet* sheet, int x, int y);
+
+    static void Init();
   public:
     inline static bool m_QuadInitialized = false;
     inline static unsigned int m_QuadVBO;

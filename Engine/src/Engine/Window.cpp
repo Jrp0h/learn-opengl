@@ -9,6 +9,7 @@
 #include <stdexcept>
 
 #include "Input.h"
+#include "OpenGL.h"
 
 Window::Window(uint32_t width, uint32_t height, const char* title)
   : m_Width(width), m_Height(height) 
@@ -32,17 +33,15 @@ Window::Window(uint32_t width, uint32_t height, const char* title)
 
     glfwSetWindowSizeCallback(m_Window, Window::OnResize);
 
-    glViewport(0, 0, m_Width, m_Height);
+    OpenGL::SetViewport(m_Width, m_Height);
 
     Input::SetWindow(m_Window);
     glfwSetInputMode(m_Window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);  
     glfwSetCursorPosCallback(m_Window, Input::OnMouseMove);
 
     glfwSetWindowUserPointer(m_Window, (void*)this);
-    glEnable(GL_DEPTH_TEST);
-
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  
+    OpenGL::Init();
 }
 
 Window::~Window()
@@ -68,8 +67,7 @@ void Window::SetShouldClose(bool value)
 
 void Window::BeginFrame() const
 {
-  glClearColor(m_ClearColor.r, m_ClearColor.g, m_ClearColor.b, 1.0f);
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  OpenGL::Clear(m_ClearColor);
 }
 
 void Window::EndFrame() const {
@@ -95,5 +93,5 @@ void Window::OnResize(GLFWwindow* window, int width, int height)
   t->m_Width = width;
   t->m_Height = height;
 
-  glViewport(0, 0, width, height);
+  OpenGL::SetViewport(width, height);
 }
