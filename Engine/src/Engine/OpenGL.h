@@ -21,6 +21,9 @@ public:
     glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
   }
 
+  static void EnableDepthTest() { glEnable(GL_DEPTH_TEST); }
+  static void DisableDepthTest() { glDisable(GL_DEPTH_TEST); }
+
   static void SetViewport(uint32_t width, uint32_t height) 
   {
     glViewport(0, 0, width, height);

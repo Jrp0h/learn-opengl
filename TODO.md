@@ -1,33 +1,29 @@
 # TODO
 
-## Lighting
+## Collisions
 
-> Need to have lighting work with objects
+Implement AABB collisions and triggers
 
-Shaders:
+## GameObjects
 
-* Lit Shader (Shader of the object being lit up by a light source)
-* Lighting Shader (The shader of the light source);
+Have a static list of all GameObjects in the Scene
+Automatically added when Creating a GameObject
 
-Classes:
+### Components
 
-* Point light
-* Directional Light
-* Spotlight
+Use EnTT
 
-## Cube maps
+Components:
 
-> Like the header says
+* Transform
+* Rigidbody
+* Collider
+* Scripts
 
-## Materials
+## World
 
-> Create a class for handeling Materials
-> Organizing the, binding the correct
-> textures to the correct slot
+Gravity
 
-Textures:
+## Sound
 
-* Defuse
-* Specular
-* Metallicness
-* Normal
+OpenAL?

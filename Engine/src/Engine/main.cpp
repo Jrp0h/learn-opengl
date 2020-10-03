@@ -23,6 +23,7 @@
 #include "SpriteSheet.h"
 #include "Animation.h"
 #include "Animator.h"
+#include "OpenGL.h"
 
 class TriangleApplication {
 public:
@@ -36,6 +37,8 @@ public:
 private:
   void mainLoop() {
 
+    OpenGL::DisableDepthTest();
+
     m_Window.SetClearColor(0.2f, 0.3f, 0.3f);
 
     m_Camera = new Camera(45.0f, m_Width, m_Height);
@@ -44,8 +47,8 @@ private:
 
 
     // Shader shader("res/shaders/texture_vertex.glsl", "res/shaders/texture_fragment.glsl");
-    Texture texture("res/textures/spritesheet.png");
-    Texture texture2("res/textures/awesomeface.png", true);
+    Texture texture("res/textures/spritesheet.png", true);
+    Texture texture2("res/textures/awesomeface.png");
 
     SpriteSheet sheet(&texture, 64, 44, 6, 9);
 
@@ -57,6 +60,11 @@ private:
 
     // m_PlayerTransform.SetRotation(glm::vec3(0.0f, 00.0f, -90.0f));
 
+    // m_PlayerTransform2.Translate(glm::vec3(-1.0f, 0.0f, 0.0f));
+    m_PlayerTransform2 = m_PlayerTransform;
+    m_PlayerTransform2.Translate(glm::vec3(-0.1f, 0.0f, 0.0f));
+
+    m_PlayerTransform.Translate(glm::vec3(0.0f, 0.0f, 0.001f));
 
     while (!m_Window.ShouldClose()) {
       Time::UpdateDeltaTime();
@@ -72,7 +80,8 @@ private:
 
       // Renderer::TexturedQuad(&m_PlayerTransform, m_Camera, &texture2);
       Renderer::RenderSpriteSheet(&m_PlayerTransform, m_Camera, &sheet, currImg.x, currImg.y);
-      // Renderer::TexturedQuad(&m_PlayerTransform, m_Camera, &texture2);
+      // Renderer::RenderSpriteSheet(&m_PlayerTransform2, m_Camera, &sheet, currImg.x, currImg.y);
+      Renderer::TexturedQuad(&m_PlayerTransform2, m_Camera, &texture2);
       // Renderer::TexturedQuad(&m_PlayerTransform, m_Camera, &texture);
 
       m_Window.EndFrame();
@@ -119,6 +128,7 @@ private:
 
   Animator m_Animator;
   Transform m_PlayerTransform;
+  Transform m_PlayerTransform2;
 };
 
 int main() {

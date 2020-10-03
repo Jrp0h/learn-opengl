@@ -2,14 +2,18 @@
 
 #include "Camera.h"
 #include "Window.h"
-#include <bits/stdint-uintn.h>
+#include "OpenGL.h"
 #include <glm/fwd.hpp>
 #include <string>
 
 class Application {
   public:
-    Application(const char* title, uint32_t width, uint32_t height,  glm::vec3 clearColor)
-    : m_Title(title), m_Width(width), m_Height(height), m_ClearColor(clearColor), m_CurrentCamera(nullptr) {}
+    Application(const char* title, uint32_t width, uint32_t height,  glm::vec3 clearColor, bool is2D)
+    : m_Title(title), m_Width(width), m_Height(height), m_ClearColor(clearColor), m_CurrentCamera(nullptr), m_Is2D(is2D)
+    {
+      if(m_Is2D)
+        OpenGL::DisableDepthTest();
+    }
 
   public:
     virtual void OnStart() {}
@@ -34,4 +38,6 @@ class Application {
     Camera* m_CurrentCamera;
 
     uint32_t m_Width, m_Height;
+
+    bool m_Is2D;
 };
