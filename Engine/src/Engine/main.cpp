@@ -55,16 +55,16 @@ private:
     m_Animator.AddAnimation("idle", &idle);
     m_Animator.AddAnimation("run", &run);
 
-    m_PlayerTransform.SetRotation(glm::vec3(0.0f, 00.0f, -90.0f));
+    // m_PlayerTransform.SetRotation(glm::vec3(0.0f, 00.0f, -90.0f));
 
 
     while (!m_Window.ShouldClose()) {
       Time::UpdateDeltaTime();
 
       // std::cout << "FPS: " << 1.0f / Time::GetDeltaTime() << std::endl;
+      m_Animator.UpdateTime();
 
       m_Window.BeginFrame();
-      m_Animator.UpdateTime();
 
       processInput(Time::GetDeltaTime());
 
@@ -95,7 +95,7 @@ private:
     if (Input::IsKeyPressed(Key::A))
     {
       currentPos -= (playerSpeed * dt);
-      m_PlayerTransform.SetScale(glm::vec3(1.0f, -1.0f, 1.0f));
+      m_PlayerTransform.SetScale(glm::vec3(-1.0f, 1.0f, 1.0f));
     }
 
     if(currentPos == m_PlayerTransform.GetPosition())

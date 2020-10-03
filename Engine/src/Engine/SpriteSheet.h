@@ -16,16 +16,17 @@ public:
     y = m_CountY - y;
 
     coords[0] = (x * (float)m_TileWidth) / (float)m_Texture->GetWidth();
-    coords[1] = (y * (float)m_TileHeight) / (float)m_Texture->GetHeight();
+    coords[1] = ((y + 1) * (float)m_TileHeight) / (float)m_Texture->GetHeight();
 
-    coords[2] = ((x + 1) * (float)m_TileWidth) / (float)m_Texture->GetWidth();
+    coords[2] = (x * (float)m_TileWidth) / (float)m_Texture->GetWidth();
     coords[3] = (y * (float)m_TileHeight) / (float)m_Texture->GetHeight();
 
     coords[4] = ((x + 1) * (float)m_TileWidth) / (float)m_Texture->GetWidth();
-    coords[5] = ((y + 1) * (float)m_TileHeight) / (float)m_Texture->GetHeight();
+    coords[5] = (y * (float)m_TileHeight) / (float)m_Texture->GetHeight();
 
-    coords[6] = (x * (float)m_TileWidth) / (float)m_Texture->GetWidth();
+    coords[6] = ((x + 1) * (float)m_TileWidth) / (float)m_Texture->GetWidth();
     coords[7] = ((y + 1) * (float)m_TileHeight) / (float)m_Texture->GetHeight();
+
 
     return coords;
   }
