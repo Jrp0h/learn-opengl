@@ -4,8 +4,9 @@
 
 class Camera {
   public:
+    // Perspective
     Camera(float fov, unsigned int m_Width, unsigned int m_Height, float near = 0.1f, float far = 100.0f);
-
+    
     void Translate(glm::vec3 position);
     void Rotate(float d, glm::vec3 rotation);
 

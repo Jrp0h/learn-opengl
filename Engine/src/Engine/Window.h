@@ -3,6 +3,7 @@
 #include <GL/glew.h>
 #include <GL/gl.h>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
 
 class Window {
 public:
@@ -16,6 +17,10 @@ public:
 
   bool ShouldClose() const;
   void SetShouldClose(bool value);
+  void BeginFrame() const;
+  void EndFrame() const;
+  void SetClearColor(float r, float g, float b);
+  void SetClearColor(glm::vec3 color);
 
   void SwapBuffers() const;
 
@@ -26,4 +31,5 @@ private:
   GLFWwindow* m_Window;
   uint32_t m_Width, m_Height;
   char* m_Title;
+  glm::vec3 m_ClearColor;
 };

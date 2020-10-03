@@ -62,6 +62,29 @@ void Window::SetShouldClose(bool value)
   glfwSetWindowShouldClose(m_Window, value);
 }
 
+void Window::BeginFrame() const
+{
+  glClearColor(m_ClearColor.r, m_ClearColor.g, m_ClearColor.b, 1.0f);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+void Window::EndFrame() const {
+  this->SwapBuffers();
+  glfwPollEvents();
+}
+
+void Window::SetClearColor(float r, float g, float b)
+{
+  m_ClearColor.r = r;
+  m_ClearColor.g = g;
+  m_ClearColor.b = b;
+}
+
+void Window::SetClearColor(glm::vec3 color)
+{
+  m_ClearColor = color;
+}
+
 void Window::SwapBuffers() const
 {
   glfwSwapBuffers(m_Window);

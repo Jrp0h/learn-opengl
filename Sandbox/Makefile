@@ -19,12 +19,10 @@ endif
 # #############################################
 
 RESCOMP = windres
-INCLUDES += -Isrc
+INCLUDES += -Isrc -I../Engine/src
 FORCE_INCLUDE +=
 ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
 ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
-LIBS += -lglfw -lGL -lX11 -lpthread -lXrandr -lXi -ldl -lGLEW -lassimp
-LDDEPS +=
 LINKCMD = $(CXX) -o "$@" $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
 define PREBUILDCMDS
 endef
@@ -34,22 +32,26 @@ define POSTBUILDCMDS
 endef
 
 ifeq ($(config),debug)
-TARGETDIR = ../bin/Debug-linux-x86_64/OpenGLTest
-TARGET = $(TARGETDIR)/OpenGLTest
-OBJDIR = ../bin-int/Debug-linux-x86_64/OpenGLTest
-DEFINES += -DPLATFORM_LINUX -D_DEBUG
+TARGETDIR = ../bin/Debug-linux-x86_64/Sandbox
+TARGET = $(TARGETDIR)/Sandbox
+OBJDIR = ../bin-int/Debug-linux-x86_64/Sandbox
+DEFINES += -DPLATFORM_LINUX -DGAME_DEBUG
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -g -std=c++17
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -g -std=c++17 -std=c++17
-ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64
+LIBS += ../bin/Debug-linux-x86_64/Engine/libEngine.so -lglfw -lGL -lX11 -lpthread -lXrandr -lXi -ldl -lGLEW -lassimp
+LDDEPS += ../bin/Debug-linux-x86_64/Engine/libEngine.so
+ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -Wl,-rpath,'$$ORIGIN/../Engine' -m64
 
 else ifeq ($(config),release)
-TARGETDIR = ../bin/Release-linux-x86_64/OpenGLTest
-TARGET = $(TARGETDIR)/OpenGLTest
-OBJDIR = ../bin-int/Release-linux-x86_64/OpenGLTest
-DEFINES += -DPLATFORM_LINUX -D_RELEASE
+TARGETDIR = ../bin/Release-linux-x86_64/Sandbox
+TARGET = $(TARGETDIR)/Sandbox
+OBJDIR = ../bin-int/Release-linux-x86_64/Sandbox
+DEFINES += -DPLATFORM_LINUX -DGAME_RELEASE
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2 -std=c++17
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2 -std=c++17 -std=c++17
-ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64 -s
+LIBS += ../bin/Release-linux-x86_64/Engine/libEngine.so -lglfw -lGL -lX11 -lpthread -lXrandr -lXi -ldl -lGLEW -lassimp
+LDDEPS += ../bin/Release-linux-x86_64/Engine/libEngine.so
+ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -Wl,-rpath,'$$ORIGIN/../Engine' -m64 -s
 
 endif
 
@@ -63,26 +65,8 @@ endif
 GENERATED :=
 OBJECTS :=
 
-GENERATED += $(OBJDIR)/Camera.o
-GENERATED += $(OBJDIR)/Input.o
-GENERATED += $(OBJDIR)/Light.o
-GENERATED += $(OBJDIR)/Mesh.o
-GENERATED += $(OBJDIR)/Model.o
-GENERATED += $(OBJDIR)/Shader.o
-GENERATED += $(OBJDIR)/Texture.o
-GENERATED += $(OBJDIR)/Window.o
 GENERATED += $(OBJDIR)/main.o
-GENERATED += $(OBJDIR)/stb_image.o
-OBJECTS += $(OBJDIR)/Camera.o
-OBJECTS += $(OBJDIR)/Input.o
-OBJECTS += $(OBJDIR)/Light.o
-OBJECTS += $(OBJDIR)/Mesh.o
-OBJECTS += $(OBJDIR)/Model.o
-OBJECTS += $(OBJDIR)/Shader.o
-OBJECTS += $(OBJDIR)/Texture.o
-OBJECTS += $(OBJDIR)/Window.o
 OBJECTS += $(OBJDIR)/main.o
-OBJECTS += $(OBJDIR)/stb_image.o
 
 # Rules
 # #############################################
@@ -92,7 +76,7 @@ all: $(TARGET)
 
 $(TARGET): $(GENERATED) $(OBJECTS) $(LDDEPS) | $(TARGETDIR)
 	$(PRELINKCMDS)
-	@echo Linking OpenGLTest
+	@echo Linking Sandbox
 	$(SILENT) $(LINKCMD)
 	$(POSTBUILDCMDS)
 
@@ -113,7 +97,7 @@ else
 endif
 
 clean:
-	@echo Cleaning OpenGLTest
+	@echo Cleaning Sandbox
 ifeq (posix,$(SHELLTYPE))
 	$(SILENT) rm -f  $(TARGET)
 	$(SILENT) rm -rf $(GENERATED)
@@ -146,34 +130,7 @@ endif
 # File Rules
 # #############################################
 
-$(OBJDIR)/Camera.o: src/Camera.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/Input.o: src/Input.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/Light.o: src/Light.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/Mesh.o: src/Mesh.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/Model.o: src/Model.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/Shader.o: src/Shader.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/Texture.o: src/Texture.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/Window.o: src/Window.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/main.o: src/main.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/stb_image.o: src/vendor/stb_image/stb_image.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 
