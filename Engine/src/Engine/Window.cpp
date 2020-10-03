@@ -39,6 +39,10 @@ Window::Window(uint32_t width, uint32_t height, const char* title)
     glfwSetCursorPosCallback(m_Window, Input::OnMouseMove);
 
     glfwSetWindowUserPointer(m_Window, (void*)this);
+    glEnable(GL_DEPTH_TEST);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 Window::~Window()
@@ -69,7 +73,7 @@ void Window::BeginFrame() const
 }
 
 void Window::EndFrame() const {
-  this->SwapBuffers();
+  glfwSwapBuffers(m_Window);
   glfwPollEvents();
 }
 
@@ -83,11 +87,6 @@ void Window::SetClearColor(float r, float g, float b)
 void Window::SetClearColor(glm::vec3 color)
 {
   m_ClearColor = color;
-}
-
-void Window::SwapBuffers() const
-{
-  glfwSwapBuffers(m_Window);
 }
 
 void Window::OnResize(GLFWwindow* window, int width, int height)

@@ -11,17 +11,23 @@
 #include <string>
 
 #include "Camera.h"
+#include "Components/Transform.h"
 #include "Input.h"
+#include "Renderer.h"
 #include "Shader.h"
 #include "Texture.h"
 #include "Window.h"
 #include "Light.h"
+#include "Time.h"
 #include "Model.h"
+#include "SpriteSheet.h"
+#include "Animation.h"
+#include "Animator.h"
 
 class TriangleApplication {
 public:
   TriangleApplication(uint32_t width, uint32_t height, const char *title)
-    : m_Width(width), m_Height(height), m_Title(title), m_Camera(), m_Window(width, height, title) {  }
+    : m_Width(width), m_Height(height), m_Title(title), m_Camera(), m_Window(width, height, title), m_Animator(0.125f)  {  }
 
   void Run() {
     mainLoop();
@@ -30,244 +36,73 @@ public:
 private:
   void mainLoop() {
 
-    glEnable(GL_DEPTH_TEST);
-
-  
-    // float vertices[] = {
-        // // positions          // normals           // texture coords
-        // -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
-         // 0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,
-         // 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
-         // 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
-        // -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f,
-        // -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
-
-        // -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
-         // 0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f,
-         // 0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
-         // 0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
-        // -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  1.0f,
-        // -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
-
-        // -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
-        // -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
-        // -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-        // -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-        // -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
-        // -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
-
-         // 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
-         // 0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
-         // 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-         // 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-         // 0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
-         // 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
-
-        // -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
-         // 0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  1.0f,
-         // 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
-         // 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
-        // -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  0.0f,
-        // -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
-
-        // -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f,
-         // 0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  1.0f,
-         // 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
-         // 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
-        // -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f,
-        // -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f
-    // };
-
-
-    // unsigned int indices[] = {0, 1, 3, 1, 2, 3};
-
-    // unsigned int VBO, VAO; //, EBO;
-    // glGenVertexArrays(1, &VAO);
-    // glGenBuffers(1, &VBO);
-
-    // glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    // glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    // glBindVertexArray(VAO);
-
-    // // position attribute
-    // glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-    // glEnableVertexAttribArray(0);
-
-    // glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-    // glEnableVertexAttribArray(1);
-
-    // glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-    // glEnableVertexAttribArray(2);
+    m_Window.SetClearColor(0.2f, 0.3f, 0.3f);
 
     m_Camera = new Camera(45.0f, m_Width, m_Height);
-    m_Camera->SetPosition(glm::vec3(0.0f, 0, 5));
+    m_Camera->SetPosition(glm::vec3(0.0f, 0, -3.0f));
+    m_Camera->SetRotation(glm::vec3(90.0f, 0.0f, 0.0f));
 
-    // glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
-    // glm::vec3 cubePositions[] = { 
-        // glm::vec3(0.0f, 0.0f, 0.0f),
-        // glm::vec3(0.0f, 1.0f, -1.0f),
-        // glm::vec3(-1.5f, -2.2f, -2.5f),
-        // glm::vec3(-3.8f, -2.0f, -12.3f),
-        // glm::vec3(2.4f, -0.4f, -3.5f),
-        // glm::vec3(-1.7f, 3.0f, -7.5f),
-        // glm::vec3(1.3f, -2.0f, -2.5f),
-        // glm::vec3(1.5f, 2.0f, -2.5f),
-        // glm::vec3(1.5f, 0.2f, -1.5f), 
-        // glm::vec3(-1.3f, 1.0f, -1.5f)
-    // };
+    // Shader shader("res/shaders/texture_vertex.glsl", "res/shaders/texture_fragment.glsl");
+    Texture texture("res/textures/spritesheet.png");
+    Texture texture2("res/textures/awesomeface.png", true);
 
-    // glm::vec3 pointLights[] = { 
-        // glm::vec3( 0.7f,  0.2f,  2.0f),
-        // glm::vec3( 2.3f, -3.3f, -4.0f),
-        // glm::vec3(-4.0f,  2.0f, -12.0f),
-        // glm::vec3( 0.0f,  0.0f, -3.0f)
-    // };
+    SpriteSheet sheet(&texture, 64, 44, 6, 9);
 
-    // Shader litShader("res/shaders/lit_vertex.glsl", "res/shaders/lit_fragment.glsl");
-    // Texture box("res/textures/container2.png");
-    // Texture boxSpecular("res/textures/container2_specular.png");
-    
-    Shader modelShader("res/shaders/model_vertex.glsl", "res/shaders/model_fragment.glsl");
+    Animation idle(1, 1, 6, 1, 6, 9);
+    Animation run(1, 2, 2, 3, 6, 9);
 
-    Model modelObj("res/Models/backpack.obj");
+    m_Animator.AddAnimation("idle", &idle);
+    m_Animator.AddAnimation("run", &run);
+
+    m_PlayerTransform.SetRotation(glm::vec3(0.0f, 00.0f, -90.0f));
+
 
     while (!m_Window.ShouldClose()) {
-      float currentFrame = glfwGetTime();
-      deltaTime = currentFrame - lastFrame;
-      lastFrame = currentFrame;
+      Time::UpdateDeltaTime();
 
-      processInput(deltaTime);
+      std::cout << "FPS: " << 1.0f / Time::GetDeltaTime() << std::endl;
 
       m_Window.BeginFrame();
+      m_Animator.UpdateTime();
 
+      processInput(Time::GetDeltaTime());
 
+      glm::vec2 currImg = m_Animator.GetCurrentOffset();
 
-      modelShader.Bind();
+      // Renderer::TexturedQuad(&m_PlayerTransform, m_Camera, &texture2);
+      Renderer::RenderSpriteSheet(&m_PlayerTransform, m_Camera, &sheet, currImg.x, currImg.y);
+      // Renderer::TexturedQuad(&m_PlayerTransform, m_Camera, &texture2);
+      // Renderer::TexturedQuad(&m_PlayerTransform, m_Camera, &texture);
 
-      glm::mat4 model(1.0f);
-
-      modelShader.SetMatrix4fv("u_Model", model);
-      modelShader.SetMatrix4fv("u_View", m_Camera->GetView());
-      modelShader.SetMatrix4fv("u_Projection", m_Camera->GetProjection());
-
-      modelObj.Draw(&modelShader);
-
-
-      // for(int i = 0; i < 10; i++)
-      // {
-        // glm::mat4 model = glm::mat4(1.0f);
-        // model = glm::mat4(1.0f);
-        // model = glm::translate(model, cubePositions[i]);
-        // model = glm::rotate(model, glm::radians(20.0f * i), glm::vec3(1.0f, 0.3f, 0.5f));
-
-        // litShader.Bind();
-        
-        // litShader.SetInt("u_Material.diffuse", 0);
-        // box.Bind();
-
-        // litShader.SetInt("u_Material.specular", 1);
-        // boxSpecular.Bind(1);
-
-        // litShader.SetFloat("u_Material.shininess", 32.0f);
-
-        // // Point Light
-        // PointLight pointLight("");
-
-        // for(int i = 0; i < sizeof(pointLights)/sizeof(pointLights[0]); i++)
-        // {
-          // pointLight.SetName("u_PointLights[" + std::to_string(i) + "]");
-          // pointLight.SetPosition(pointLights[i]);
-
-          // pointLight.SetDiffuse(glm::vec3(0.5f, 0.5f, 0.5f));
-          // pointLight.SetAmbient(glm::vec3(0.2f, 0.2f, 0.2f));
-          // pointLight.SetSpecular(glm::vec3(1.0f, 1.0f, 1.0f));
-
-          // pointLight.SetConstant(1.0f);
-          // pointLight.SetLinear(0.09f);
-          // pointLight.SetQuadratic(0.032f);
-          // pointLight.Use(&litShader);
-        // }
-
-        // // Directional Light
-        // DirectionalLight directionalLight("u_DirectionLight");
-        // directionalLight.SetDirection(glm::vec3(-0.2f, -1.0f, 0.3f));
-
-        // directionalLight.SetDiffuse(glm::vec3(0.2f, 0.2f, 0.2f));
-        // directionalLight.SetAmbient(glm::vec3(0.2f, 0.2f, 0.2f));
-        // directionalLight.SetSpecular(glm::vec3(0.5f, 0.5f, 0.5f));
-
-        // directionalLight.Use(&litShader);
-
-        // // Spotlight
-        // Spotlight spotlight("u_Spotlight");
-        // spotlight.SetPosition(m_Camera->GetPosition());
-        // spotlight.SetDirection(m_Camera->GetFront());
-        // spotlight.SetCutOff(glm::cos(glm::radians(12.5f)));
-        // spotlight.SetOuterCutOff(glm::cos(glm::radians(17.5f)));
-
-        // spotlight.SetDiffuse(glm::vec3(0.5f, 0.5f, 0.5f));
-        // spotlight.SetAmbient(glm::vec3(0.2f, 0.2f, 0.2f));
-        // spotlight.SetSpecular(glm::vec3(1.0f, 1.0f, 1.0f));
-
-        // spotlight.SetConstant(1.0f);
-        // spotlight.SetLinear(0.09f);
-        // spotlight.SetQuadratic(0.032f);
-
-        // spotlight.Use(&litShader);
-        // litShader.SetMatrix4fv("u_Model", model);
-        // litShader.SetMatrix4fv("u_View", m_Camera->GetView());
-        // litShader.SetMatrix4fv("u_Projection", m_Camera->GetProjection());
-        // litShader.SetVec3("u_ViewPosition", m_Camera->GetPosition());
-
-        // litShader.Bind();
-        // glBindVertexArray(VAO);
-
-        // glDrawArrays(GL_TRIANGLES, 0, 36);
-        
-
-      m_Window.SwapBuffers();
-      glfwPollEvents();
+      m_Window.EndFrame();
     }
   }
 
   void processInput(float dt) {
-    
-    float sensitivity = 0.05f;
-    glm::vec3 rotation = m_Camera->GetRotation();
-    rotation.x += Input::GetMouseX() * sensitivity;
-    rotation.y -= Input::GetMouseY() * sensitivity;
-
-    if(rotation.y > 89.0f)
-      rotation.y = 89.0f;
-    if(rotation.y < -89.0f)
-      rotation.y = -89.0f;
-
-    m_Camera->SetRotation(rotation);
-
-    auto currentPos = m_Camera->GetPosition();
-    float cameraSpeed = 5.0f;
-  
-    if(Input::IsKeyPressed(Key::LEFT_CONTROL))
-      cameraSpeed = 1.0f;
+   
+    auto currentPos = m_PlayerTransform.GetPosition();
+    float playerSpeed = 5.0f;
 
     if (Input::IsKeyPressed(Key::ESCAPE))
       m_Window.SetShouldClose(true);
+    
     if (Input::IsKeyPressed(Key::D))
-      currentPos += (cameraSpeed * dt * m_Camera->GetRight());
+    {
+      currentPos += (playerSpeed * dt);
+      m_PlayerTransform.SetScale(glm::vec3(1.0f, 1.0f, 1.0f));
+    }
     if (Input::IsKeyPressed(Key::A))
-      currentPos -= (cameraSpeed * dt * m_Camera->GetRight());
-    if (Input::IsKeyPressed(Key::W))
-      currentPos += (cameraSpeed * dt * m_Camera->GetFront());
-    if (Input::IsKeyPressed(Key::S))
-      currentPos -= (cameraSpeed * dt * m_Camera->GetFront());
-    if (Input::IsKeyPressed(Key::SPACE))
-      currentPos -= (cameraSpeed * dt * glm::vec3(0.0f, -1.0f, 0.0f));
-    if (Input::IsKeyPressed(Key::LEFT_SHIFT))
-      currentPos -= (cameraSpeed * dt * glm::vec3(0.0f, 1.0f, 0.0f));
+    {
+      currentPos -= (playerSpeed * dt);
+      m_PlayerTransform.SetScale(glm::vec3(1.0f, -1.0f, 1.0f));
+    }
 
-    m_Camera->SetPosition(currentPos);
+    if(currentPos == m_PlayerTransform.GetPosition())
+      m_Animator.StartAnimation("idle");
+    else 
+      m_Animator.StartAnimation("run");
+  
   }
 
 private:
@@ -281,6 +116,9 @@ private:
   const char *m_FragmentShader;
 
   float deltaTime, lastFrame;
+
+  Animator m_Animator;
+  Transform m_PlayerTransform;
 };
 
 int main() {

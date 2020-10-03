@@ -30,34 +30,26 @@ define PREBUILDCMDS
 endef
 define PRELINKCMDS
 endef
+define POSTBUILDCMDS
+endef
 
 ifeq ($(config),debug)
 TARGETDIR = ../bin/Debug-linux-x86_64/Engine
-TARGET = $(TARGETDIR)/libEngine.so
+TARGET = $(TARGETDIR)/Engine
 OBJDIR = ../bin-int/Debug-linux-x86_64/Engine
 DEFINES += -DPLATFORM_LINUX -DENGINE_DEBUG
-ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -fPIC -g -std=c++17
-ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -fPIC -g -std=c++17 -std=c++17
-ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64 -shared -Wl,-soname=libEngine.so
-define POSTBUILDCMDS
-	@echo Running postbuild commands
-	mkdir -p ../bin/Debug-linux-x86_64/Sandbox
-	cp -rf ../bin/Debug-linux-x86_64/Engine/libEngine.so ../bin/Debug-linux-x86_64/Sandbox/Engine
-endef
+ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -g -std=c++17
+ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -g -std=c++17 -std=c++17
+ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64
 
 else ifeq ($(config),release)
 TARGETDIR = ../bin/Release-linux-x86_64/Engine
-TARGET = $(TARGETDIR)/libEngine.so
+TARGET = $(TARGETDIR)/Engine
 OBJDIR = ../bin-int/Release-linux-x86_64/Engine
 DEFINES += -DPLATFORM_LINUX -DENGINE_RELEASE
-ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2 -fPIC -std=c++17
-ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2 -fPIC -std=c++17 -std=c++17
-ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64 -shared -Wl,-soname=libEngine.so -s
-define POSTBUILDCMDS
-	@echo Running postbuild commands
-	mkdir -p ../bin/Release-linux-x86_64/Sandbox
-	cp -rf ../bin/Release-linux-x86_64/Engine/libEngine.so ../bin/Release-linux-x86_64/Sandbox/Engine
-endef
+ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2 -std=c++17
+ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2 -std=c++17 -std=c++17
+ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64 -s
 
 endif
 
@@ -77,6 +69,7 @@ GENERATED += $(OBJDIR)/Input.o
 GENERATED += $(OBJDIR)/Light.o
 GENERATED += $(OBJDIR)/Mesh.o
 GENERATED += $(OBJDIR)/Model.o
+GENERATED += $(OBJDIR)/Renderer.o
 GENERATED += $(OBJDIR)/Shader.o
 GENERATED += $(OBJDIR)/Texture.o
 GENERATED += $(OBJDIR)/Window.o
@@ -88,6 +81,7 @@ OBJECTS += $(OBJDIR)/Input.o
 OBJECTS += $(OBJDIR)/Light.o
 OBJECTS += $(OBJDIR)/Mesh.o
 OBJECTS += $(OBJDIR)/Model.o
+OBJECTS += $(OBJDIR)/Renderer.o
 OBJECTS += $(OBJDIR)/Shader.o
 OBJECTS += $(OBJDIR)/Texture.o
 OBJECTS += $(OBJDIR)/Window.o
@@ -172,6 +166,9 @@ $(OBJDIR)/Mesh.o: src/Engine/Mesh.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/Model.o: src/Engine/Model.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/Renderer.o: src/Engine/Renderer.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/Shader.o: src/Engine/Shader.cpp

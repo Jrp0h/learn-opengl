@@ -4,7 +4,7 @@
 
 class Texture {
   public:
-    Texture(const char* texturePath);
+    Texture(const char* texturePath, bool useNearest = false);
     ~Texture();
 
     void Bind(unsigned int slot = 0) const;
@@ -15,6 +15,8 @@ class Texture {
 
     inline std::string GetType() const { return m_Type; } 
     inline void SetType(std::string type) { m_Type = type; } 
+
+    inline const char* GetPath() const { return m_FilePath; }
   private:
     unsigned int m_TextureID;
     std::string m_Type;

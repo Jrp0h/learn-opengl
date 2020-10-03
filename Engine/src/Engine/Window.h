@@ -22,8 +22,6 @@ public:
   void SetClearColor(float r, float g, float b);
   void SetClearColor(glm::vec3 color);
 
-  void SwapBuffers() const;
-
 private:
   static void OnResize(GLFWwindow * window, int width, int height);
 

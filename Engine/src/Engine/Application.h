@@ -5,6 +5,7 @@
 #include <bits/stdint-uintn.h>
 #include <glm/fwd.hpp>
 #include <string>
+
 class Application {
   public:
     Application(const char* title, uint32_t width, uint32_t height,  glm::vec3 clearColor)

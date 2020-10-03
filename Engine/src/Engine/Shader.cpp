@@ -27,8 +27,6 @@ Shader::~Shader()
 std::string Shader::ReadFromFile(const char* filepath) {
   std::ifstream file; 
 
-  file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-
   file.open(filepath);
 
   if(file.fail())

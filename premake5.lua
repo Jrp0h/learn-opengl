@@ -11,7 +11,7 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 project "Engine"
    location "Engine"
-   kind "SharedLib"
+   kind "ConsoleApp"
 
    language "C++"
    cppdialect "C++17"
@@ -38,10 +38,10 @@ project "Engine"
          "PLATFORM_LINUX"
       }
 
-      postbuildcommands {
-         ("{MKDIR} ../bin/" .. outputdir .. "/Sandbox"),
-         ("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Sandbox/Engine")
-      }
+      -- postbuildcommands {
+         -- ("{MKDIR} ../bin/" .. outputdir .. "/Sandbox"),
+         -- ("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Sandbox/Engine")
+      -- }
 
       staticruntime "On"
 
@@ -54,40 +54,40 @@ project "Engine"
       optimize "On"
 
 
-project "Sandbox"
-   location "Sandbox"
-   kind "ConsoleApp"
-   language "C++"
-   cppdialect "C++17"
+-- project "Sandbox"
+   -- location "Sandbox"
+   -- kind "ConsoleApp"
+   -- language "C++"
+   -- cppdialect "C++17"
 
-   targetdir("bin/".. outputdir .. "/%{prj.name}")
-   objdir("bin-int/".. outputdir .. "/%{prj.name}")
+   -- targetdir("bin/".. outputdir .. "/%{prj.name}")
+   -- objdir("bin-int/".. outputdir .. "/%{prj.name}")
 
-   files {
-      "%{prj.name}/src/**.h",
-      "%{prj.name}/src/**.cpp",
-   }
+   -- files {
+      -- "%{prj.name}/src/**.h",
+      -- "%{prj.name}/src/**.cpp",
+   -- }
 
-   includedirs {
-      "%{prj.name}/src",
-      "Engine/src"
-   }
+   -- includedirs {
+      -- "%{prj.name}/src",
+      -- "Engine/src"
+   -- }
 
-   filter "system:linux"
-      buildoptions { "-std=c++17" } 
-      -- libdirs { "vendor/" }
-      links { "Engine",  "glfw", "GL", "X11", "pthread", "Xrandr", "Xi", "dl", "GLEW", "assimp" } 
+   -- filter "system:linux"
+      -- buildoptions { "-std=c++17" } 
+      -- -- libdirs { "vendor/" }
+      -- links { "Engine",  "glfw", "GL", "X11", "pthread", "Xrandr", "Xi", "dl", "GLEW", "assimp" } 
 
-      defines {
-         "PLATFORM_LINUX"
-      }
+      -- defines {
+         -- "PLATFORM_LINUX"
+      -- }
 
-      staticruntime "On"
+      -- staticruntime "On"
 
-   filter "configurations:Debug"
-      defines "GAME_DEBUG"
-      symbols "On"
+   -- filter "configurations:Debug"
+      -- defines "GAME_DEBUG"
+      -- symbols "On"
 
-   filter "configurations:Release"
-      defines "GAME_RELEASE"
-      optimize "On"
+   -- filter "configurations:Release"
+      -- defines "GAME_RELEASE"
+      -- optimize "On"

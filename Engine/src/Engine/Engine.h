@@ -9,6 +9,12 @@
 #include "Time.h"
 #include "Utils.h"
 #include "Vertex.h"
+#include "Components/Transform.h"
+#include "Animation.h"
+#include "Animator.h"
+#include "Camera.h"
+#include "Renderer.h"
+#include "SpriteSheet.h"
 
 class Engine {
 public:
